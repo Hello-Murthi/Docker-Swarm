@@ -1,0 +1,247 @@
+
+-------------------------------------------------------------------------
+
+* Helps us to create, manage multiple containers at the same time
+
+* Tasks
+
+	* Deployment of Containers
+	* Scalling 
+	* Resource allocation
+	* Load Balancing
+	* Health Monitoring
+
+-------------------------------------------------------------------------
+
+* Scalling:
+
+	- Docker compose does similar things but need Re-build images
+	- In Arachastration, no down time!
+
+-------------------------------------------------------------------------
+
+Architecture
+
+Docker Engine -> Service -> Manager Node (Task) - Multiple Worked Nodes (Tasks)
+
+-------------------------------------------------------------------------
+
+* Service
+
+	- Tasks that need to be executed on the manager and worked nodes
+	- How app works and what is it's task
+
+* Task
+
+	- Just like container
+	- By service, by mentioned no. of replicas.
+
+* Manager Node
+
+	- Accepting commands and creating service objects
+	- Allocating IP addresses to tasks
+	- Assigning tasks (containers) to Node
+	- Instructing a worker to run Task
+
+* Worker Node
+
+	- Resposible for Checking assigned tasks and executing containers
+
+-------------------------------------------------------------------------
+
+BUILD!
+
+* Docker should be installed on each Node Before!
+
+* Wherever if we Run below command, that Nodes becomes Manager
+
+docker swarm init --advertise-addr (manager IP)
+
+
+
+* So as soon as we add any other Node to it's network by below cmd, becomes Worker Node
+
+docker swarm join --token (token) (manager IP:port)
+
+-------------------------------------------------------------------------
+
+docker info
+
+	- cmd to get Info of Swarm
+
+docker node ls
+docker swarm leave
+docker node rm node-ID
+docker service rm ID
+
+If we remove service itself, containers also will be exited
+
+docker service inspect --pretty service-ID
+	- To get details about service
+
+docker service ps new-service
+
+	- Shows containers details of that service
+
+-------------------------------------------------------------------------
+
+Service
+
+	- To deploy an application
+	- Creates it's containers in Nodes based Replica counts
+
+-------------------------------------------------------------------------
+
+Docker Stack
+
+	- To deploy multiple service
+	- By YAML files
+
+If we don't write replica in YAML, by default manager creates 1 Container of that service and runs in itself (manager)
+
+
+version: '3.3'
+services:
+  sample1:
+    image: 'nginx:latest'
+    ports:
+      - "80:80"
+
+
+sudo docker stack deploy -c test.yml test-stack
+
+docker service scale service-id=2
+
+If we scale up with extra no., manager will add new containers for existing Nodes itself
+
+-------------------------------------------------------------------------
+
+Rolling Updates
+
+	- If there is any updates to running service/containers
+
+docker service update --image redis:3.2 redis(service name)
+
+-------------------------------------------------------------------------
+
+Draining Nodes
+
+	- If there is any maintainance on a Node/Container
+	- Just to not recieve any tasks by Manger assigned
+	- Mark vailabilty from Active to Drain
+
+docker node ls 
+docker node update --availability drian Node-ID
+
+-------------------------------------------------------------------------
+
+Docker Network:
+
+We use overlay network 
+
+sudo docker network create --driver overlay my-net
+sudo docker service create --replicas 2 --network my-net --name testing nginx:latest
+sudo docker service inspect --pretty testing
+
+
+To Add to a network:
+
+* First create a service without a network
+
+sudo docker service create --replicas 2 --name demo-add nginx:latest
+
+Now add to existing network :
+
+sudo docker service update --network-add my-net demo-add
+
+To remove a service from network
+sudo docker service update --network-rm my-net demo-add
+
+It just removes from network, but service will be there without attaching to any other network, you can inspect and see
+
+-------------------------------------------------------------------------
+
+Mount
+
+docker service update --mount-add type=volume,source=new-vol,target=/apps test
+
+-------------------------------------------------------------------------
+
+Replica v/s Global
+
+Replica is just assigns tasks in Nodes
+
+Global assign tasks on each Node, Good for Monitoring Agents, Anti Virus
+
+-------------------------------------------------------------------------
+
+Reserving Memory
+
+Some services may need some defualt/reserved size of Memory or CPU, so it's good flag to use
+
+--reserve-memory
+--reserve-cpu
+
+-------------------------------------------------------------------------
+
+-- constraint flag
+
+To run assign containers on specific Nodes by using Labels
+
+-------------------------------------------------------------------------
+
+--placement-pref
+
+To destribute tasks equally on Nodes
+
+Ex: 9 Tasks and 3 Nodes are there, will be distributed 3 tasks to each Node
+
+-------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+20.124.232.183
+20.25.108.117
+
+Need Docker in all Nodes
+
+sudo apt-get update
+sudo apt install docker.io
+docker --version
+
+docker swarm init --advertise-addr 20.124.232.183
+
+Expose Manger in Azure Inbound Rule (2377)
+
+docker swarm join --token SWMTKN-1-0cqcg9z4i0hj3t3q4h3oktj2zhyxc68bxa52t1e8g906injdtu-e75spirtybckl19uwa426bi2d 20.124.232.183:2377
+
+
+
+sudo docker service create --name new-service  --replicas 2 -p 80:80 nginx:latest
+
+sudo docker service ls
+
+docker ps
+
+Expose 80 on nodes
+
+
+
+
+
+SRC:
+https://www.youtube.com/watch?v=74p7csxKN8M&t=2512s
+
+
+
+
+
+
+
+
+
