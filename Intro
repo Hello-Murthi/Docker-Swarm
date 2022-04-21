@@ -279,3 +279,42 @@ https://www.youtube.com/watch?v=74p7csxKN8M&t=2512s
 
 
 
+
+
+
+Other Notes
+--------------
+
+
+Docker Swarm
+
+Master-Worker Nodes
+Odd Nodes Good just to make other Node as Leader
+
+overlay nw is suitable 
+If any node joins Overlay nw, it adds it as part of nw, self growing VPC
+
+
+docker stack ls
+docker node ls
+docker network ls
+docker service ls
+
+
+docker container ls
+
+service is not equal to container (service mentioned in yaml file)
+
+Container may run in any Node, so based on replica of container in service, service will distributes it's container in any node
+
+service as LB
+
+if any other service need to call other service, calls others service with it's port ex: sql:3000, by help of internal DNS
+
+if any container need to call diff container, first it calls DNS and then service, then service decides which of it's container is free and forwards
+
+DNS -> Service -> LB -> Container
+
+Port has to be opened in all the nodes
+
+
