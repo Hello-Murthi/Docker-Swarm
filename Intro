@@ -271,11 +271,6 @@ docker stack deploy -c stack.yml test-stack
 
 
 
-
-
-
-
-
 SRC:
 https://www.youtube.com/watch?v=74p7csxKN8M&t=2512s
 
