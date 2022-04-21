@@ -1,4 +1,4 @@
-
+	
 -------------------------------------------------------------------------
 
 * Helps us to create, manage multiple containers at the same time
@@ -224,11 +224,11 @@ docker --version
 
 
 
-docker swarm init --advertise-addr 20.25.66.87
+docker swarm init --advertise-addr 20.127.77.240
 
 Expose Manger in Azure Inbound Rule (2377)
 
-    docker swarm join --token SWMTKN-1-2oqqsh2emxw2806pt51dupzjrlfawo0v2olcsc4gnbmdh8jo09-9s84zuwhzrlw37q4b7vpz7p2t 20.25.66.87:2377
+    docker swarm join --token SWMTKN-1-62p0pqczhukdhl8zfuc8u13ym535u17hz0szijg2yzddszouyq-dezw2kw8syawbijew6aou0z13 20.127.77.240:2377
 
 
 
@@ -278,9 +278,6 @@ docker stack deploy -c stack.yml test-stack
 
 SRC:
 https://www.youtube.com/watch?v=74p7csxKN8M&t=2512s
-
-
-
 
 
 
